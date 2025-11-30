@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resultado - Exploração do Oceano</title>
+
+  <style>
+/* ===========================
+   RESET E BASE  (TEMA FUNDO DO MAR)
+   =========================== */
+:root{
+  --bg:#08324a; 
+  --bg2:#0b4f66; 
+  --card:#ffffff;
+  --text:#e9faff;
+  --muted:#aac7d4;
+  --accent:#1aaee6;   
+  --accent-2:#29dcbc; 
+  --glass: rgba(255,255,255,0.08);
+  --shadow: 0 8px 28px rgba(0,0,0,0.35);
+  --radius:14px;
+  --focus: 3px solid rgba(26,174,230,0.25);
+  --transition: 200ms;
+}
+
+.dark{
+  --bg:#010913;
+  --bg2:#001f2c;
+  --card:#04151f;
+  --text:#d3e9f2;
+  --muted:#90a9b7;
+  --accent:#24e0ff;
+  --accent-2:#18b6ff;
+  --glass: rgba(255,255,255,0.03);
+  --shadow: 0 12px 38px rgba(0,0,0,0.75);
+  --focus: 3px solid rgba(36,224,255,0.18);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:linear-gradient(180deg,var(--bg), var(--bg2) 70%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  padding:0 1rem;
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ===========================
+   ANIMAÇÃO: BOLHAS SUBINDO
+   =========================== */
+body::before,
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-repeat:repeat;
+  background-size:200px 200px;
+  opacity:.12;
+  animation: bubblesUp 14s linear infinite;
+}
+
+body::after{
+  animation-duration:22s;
+  opacity:.07;
+}
+
+@keyframes bubblesUp {
+  0% { background-position: 0 100%; }
+  100% { background-position: 0 -100%; }
+}
+
+body::before{
+  background-image:
+    radial-gradient(circle 6px at 20px 20px, rgba(255,255,255,0.4) 30%, transparent 70%),
+    radial-gradient(circle 4px at 180px 150px, rgba(255,255,255,0.4) 30%, transparent 70%),
+    radial-gradient(circle 5px at 90px 110px, rgba(255,255,255,0.4) 30%, transparent 70%);
+}
+
+body::after{
+  background-image:
+    radial-gradient(circle 9px at 60px 40px, rgba(255,255,255,0.25) 30%, transparent 70%),
+    radial-gradient(circle 12px at 140px 180px, rgba(255,255,255,0.2) 30%, transparent 70%);
+}
+
+/* ===========================
+   PARALLAX DE BOLHAS GRANDES
+   =========================== */
+.big-bubbles{
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:-1;
+  background-image:
+    radial-gradient(circle 18px, rgba(255,255,255,0.12) 40%, transparent 70%),
+    radial-gradient(circle 26px, rgba(255,255,255,0.12) 40%, transparent 70%),
+    radial-gradient(circle 22px, rgba(255,255,255,0.14) 40%, transparent 70%);
+  background-position: 20% 110%, 70% 120%, 40% 130%;
+  background-size: 170px 170px, 200px 200px, 220px 220px;
+  animation: bigBubbleRise 30s linear infinite;
+}
+
+@keyframes bigBubbleRise {
+  0% {transform:translateY(30px);}
+  100% {transform:translateY(-260px);}
+}
+
+/* ===========================
+   ONDAS ANIMADAS NO TOPO
+   =========================== */
+.waves {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'><path fill='%2306b6d4' fill-opacity='0.3' d='M0,224L48,186.7C96,149,192,75,288,69.3C384,64,480,128,576,170.7C672,213,768,235,864,218.7C960,203,1056,149,1152,154.7C1248,160,1344,224,1392,256L1440,288V0H1392C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0H0Z'/></svg>") no-repeat;
+  background-size: cover;
+  animation: waveFloat 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* animação suave das ondas */
+@keyframes waveFloat {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(20px); }
+}
+
+/* ===========================
+   PEIXES NADANDO LENTAMENTE (usaremos <img>)
+   =========================== */
+/* .fish-img são imagens <img> que posicionamos via inline styles */
+.fish-img {
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.9;
+  transform: translateX(-150px);
+  transition: transform 0.2s linear;
+}
+
+/* animação simples via keyframes */
+@keyframes fishSwim1 {
+  0% { transform: translateX(-200px) translateY(0) scaleX(1); }
+  100% { transform: translateX(120vw) translateY(-10px) scaleX(1); }
+}
+@keyframes fishSwim2 {
+  0% { transform: translateX(-200px) translateY(0) scaleX(-1); }
+  100% { transform: translateX(120vw) translateY(10px) scaleX(-1); }
+}
+
+/* ===========================
+   LAYOUT
+   =========================== */
+.container{
+  max-width:1100px;
+  margin:0 auto;
+  padding:2rem 1rem;
+}
+
+header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  padding:1rem 0;
+}
+
+.brand{
+  display:flex;
+  gap:0.75rem;
+  align-items:center;
+}
+
+.logo{
+  width:52px;
+  height:52px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:700;
+  box-shadow:var(--shadow);
+  flex-shrink:0;
+}
+
+.team{
+  font-size:0.9rem;
+  line-height:1;
+  color:var(--muted);
+}
+
+nav ul{
+  display:flex;
+  gap:0.6rem;
+  list-style:none;
+  padding:0;
+  margin:0;
+  align-items:center;
+}
+
+nav a{
+  text-decoration:none;
+  padding:0.45rem 0.7rem;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  color:var(--text);
+  font-weight:600;
+  backdrop-filter:blur(4px);
+}
+
+nav a:hover{box-shadow:var(--focus); transform:translateY(-2px);}
+
+section.curiosidades {
+  margin-top: 50px;
+}
+
+/* ===========================
+   HERO (ajustes herdados)
+   =========================== */
+.hero{
+  display:grid;
+  align-items:center;
+  margin-top:1rem;
+  border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  margin-bottom: 40px;
+  padding: 2.2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.hero button,
+.hero a button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-top: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  transition: 0.2s ease;
+}
+
+.hero button:hover,
+.hero a button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+
+.hero-inner{
+  display:flex;
+  gap:1.2rem;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  padding:1rem;
+}
+
+.hero h1{
+  margin:0;
+  font-size:clamp(1.5rem,3.5vw,2.6rem);
+  letter-spacing:-0.5px;
+  color:#dff7ff;
+}
+
+/* ===========================
+   GRID / CARDS (herdado)
+   =========================== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1rem;
+  margin-top:1rem;
+}
+
+.card{
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);
+  padding:1rem;
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+
+/* ===========================
+   FAQ, CHATBOT e demais (herdado)
+   =========================== */
+details{
+  background:rgba(255,255,255,0.07);
+  padding:0.75rem;
+  border-radius:10px;
+  box-shadow:var(--shadow);
+}
+
+summary{cursor:pointer; font-weight:700}
+details[open] summary{color:var(--accent)}
+details p{margin:0.6rem 0 0;color:var(--muted)}
+
+df-messenger{ transform:scale(0); opacity:0; pointer-events:none; transition:.3s; }
+df-messenger.aberto{ transform:scale(1); opacity:1; pointer-events:auto; }
+
+/* ===========================
+   RODAPÉ
+   =========================== */
+footer{
+  margin-top:2rem;
+  padding:1rem 0 4rem;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.top-link{ color:var(--accent); font-weight:700; }
+
+/* ===========================
+   MODAL DA CÂMERA (herdado)
+   =========================== */
+/* (mantive seu código original aqui; não modifiquei estrutura) */
+.modal-camera{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+  z-index: 2000;
+}
+.modal-camera.open{ opacity:1; pointer-events:all; }
+.modal-camera-content{
+  width: 92%;
+  max-width: 480px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadeUp 500ms ease both;
+  backdrop-filter: blur(6px);
+}
+.modal-camera-close{ position:absolute; top:10px; right:10px; background:transparent; border:0; font-size:1.35rem; cursor:pointer; color:var(--muted); transition: transform var(--transition), color var(--transition); }
+.modal-camera-close:hover{ transform:scale(1.2); color:var(--accent); }
+.modal-camera-title{ margin:0; color:var(--accent); font-size:1.45rem; font-weight:700; text-align:center; letter-spacing:.4px; }
+.modal-video-wrap{ width:100%; border-radius:14px; overflow:hidden; background:#000; box-shadow:var(--shadow); position:relative; }
+.modal-video-wrap video{ width:100%; height:auto; display:block; background:#000; }
+.modal-camera-controls{ display:flex; justify-content:center; margin-top:6px; }
+.modal-camera-btn{ padding:11px 18px; cursor:pointer; border:0; border-radius:12px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff; font-weight:700; font-size:1rem; transition: transform var(--transition), box-shadow var(--transition); box-shadow:var(--shadow); }
+.modal-camera-btn:hover{ transform:translateY(-5px); }
+.modal-camera-status{ margin:0; text-align:center; color:var(--muted); font-size:1rem; background:var(--glass); padding:10px; border-radius:10px; box-shadow:var(--shadow); }
+#fotoCanvas{ display:none; }
+
+/* ===========================
+   ANIMAÇÃO FADE
+   =========================== */
+.fade-in{ animation:fadeIn .8s ease both; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+/* ===========================
+   ACRÉSCIMOS PARA ESTA PÁGINA
+   (center-box, botão, imagem e responsividade)
+   =========================== */
+.center-box{
+  max-width:760px;
+  margin:5.2rem auto;
+  text-align:center;
+  background:var(--glass);
+  padding:2rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(8px);
+}
+.center-box h1{ margin:0 0 .25rem 0; font-size:1.9rem; color: #dff7ff; }
+.center-box h2{ margin:0; font-size:1.6rem; color:var(--accent); text-transform:capitalize; }
+.center-box p{ margin-top:.4rem; color:var(--muted); font-weight:600; }
+
+.emotion-img{
+  width:100%;
+  max-width:420px;
+  border-radius:12px;
+  margin:1.2rem auto;
+  box-shadow:var(--shadow);
+  object-fit:cover;
+  display:block;
+  background:rgba(255,255,255,0.03);
+  padding:6px;
+}
+
+.btn{
+  border:0;
+  padding:0.75rem 1.1rem;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:white;
+  margin-top:1rem;
+  box-shadow:var(--shadow);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.btn:active{ transform:translateY(1px); }
+.btn:hover{ transform:translateY(-3px); }
+
+/* Responsivo */
+@media (max-width:760px){
+  .hero{ grid-template-columns: 1fr; padding:1.2rem; gap:1rem; }
+  .center-box{ margin:4rem 1rem; padding:1.2rem; }
+  .emotion-img{ max-width:320px; }
+}
+  </style>
+</head>
+
+<body>
+
+  <div class="center-box fade-in">
+    <h1>🌊 Emoção detectada:</h1>
+    <h2 id="emocaoTitle">Processando...</h2>
+    <p id="confTitle"></p>
+
+    <img id="imagemEmocao" class="emotion-img" alt="Imagem relacionada à emoção">
+
+    <button class="btn" onclick="voltar()">Voltar</button>
+  </div>
+
+  <script>
+    const imagensPorEmocao = {
+      feliz: [
+      'static/mar_feliz/1.png', 
+      'static/mar_feliz/2.png',
+      'static/mar_feliz/3.png',
+      'static/mar_feliz/4.png',
+      'static/mar_feliz/5.png',
+      'static/mar_feliz/6.png',
+      'static/mar_feliz/7.png',
+      'static/mar_feliz/8.png',
+      'static/mar_feliz/9.png',
+      'static/mar_feliz/10.png',
+      'static/mar_feliz/11.png', 
+      'static/mar_feliz/12.png',
+      'static/mar_feliz/13.png',
+      'static/mar_feliz/14.png',
+      'static/mar_feliz/15.png',
+      'static/mar_feliz/16.png',
+      'static/mar_feliz/17.png',
+      'static/mar_feliz/18.png',
+      'static/mar_feliz/19.png',
+      'static/mar_feliz/20.png'
+    ],
+
+      triste: [
+
+      'static/mar_triste/1.png', 
+      'static/mar_triste/2.png',
+      'static/mar_triste/3.png',
+      'static/mar_triste/4.png',
+      'static/mar_triste/5.png',
+      'static/mar_triste/6.png',
+      'static/mar_triste/7.png',
+      'static/mar_triste/8.png',
+      'static/mar_triste/9.png',
+      'static/mar_triste/10.png',
+      'static/mar_triste/11.png', 
+      'static/mar_triste/12.png',
+      'static/mar_triste/13.png',
+      'static/mar_triste/14.png',
+      'static/mar_triste/15.png',
+      'static/mar_triste/16.png',
+      'static/mar_triste/17.png',
+      'static/mar_triste/18.png',
+      'static/mar_triste/19.png',
+      'static/mar_triste/20.png',
+      'static/mar_triste/21.png',
+    ],
+
+      neutro: [
+
+      'static/mar_neutro/1.png', 
+      'static/mar_neutro/2.png',
+      'static/mar_neutro/3.png',
+      'static/mar_neutro/4.png',
+      'static/mar_neutro/5.png',
+      'static/mar_neutro/6.png',
+      'static/mar_neutro/7.png',
+      'static/mar_neutro/8.png',
+      'static/mar_neutro/9.png',
+      'static/mar_neutro/10.png',
+      'static/mar_neutro/11.png', 
+      'static/mar_neutro/12.png',
+      'static/mar_neutro/13.png',
+      'static/mar_neutro/14.png',
+      'static/mar_neutro/15.png',
+      'static/mar_neutro/16.png',
+      'static/mar_neutro/17.png',
+      'static/mar_neutro/18.png',
+      'static/mar_neutro/19.png',
+      'static/mar_neutro/20.png',
+    ]
+    };
+
+    const traducoes = {
+      happy: 'feliz',
+      sad: 'triste',
+      neutral: 'neutro',
+      angry: 'triste',
+      fearful: 'triste',
+      disgusted: 'triste',
+      surprised: 'feliz'
+    };
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    function imagemAleatoria(lista) {
+      return lista[Math.floor(Math.random() * lista.length)];
+    }
+
+    const emocaoOriginal = getQueryParam('emocao') || 'neutral';
+    const conf = getQueryParam('conf') || '0';
+
+    const emocaoTraduzida = traducoes[emocaoOriginal] || 'nenhuma';
+
+    document.getElementById('emocaoTitle').innerText =
+      emocaoTraduzida.charAt(0).toUpperCase() + emocaoTraduzida.slice(1);
+
+    document.getElementById('confTitle').innerText = `Confiança: ${conf}%`;
+
+    if (imagensPorEmocao[emocaoTraduzida] && imagensPorEmocao[emocaoTraduzida].length > 0) {
+      document.getElementById('imagemEmocao').src =
+        imagemAleatoria(imagensPorEmocao[emocaoTraduzida]);
+    } else {
+      document.getElementById('imagemEmocao').style.display = 'none';
+    }
+
+    function voltar() {
+      window.location.href = 'index.html';
+    }
+  </script>
+
+</body>
+</html>
