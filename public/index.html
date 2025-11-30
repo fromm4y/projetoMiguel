@@ -230,22 +230,17 @@
   </footer>
 
 <!-- Modal da câmera -->
-<div id="cameraModal" class="modal" aria-hidden="true" style="display:none;">
+<div id="cameraModal" class="modal-camera" aria-hidden="true" style="display:none;">
   <div class="modal-content fade-in">
     <button id="fecharModal" class="botao-fechar" title="Fechar">❌</button>
-
     <h2 class="modal-title">Reconhecimento Facial</h2>
-
     <div class="video-wrap">
       <video id="video" autoplay muted playsinline></video>
     </div>
-
     <div class="controls">
       <button id="tirarFoto" class="botao-foto" title="Tirar foto">📸</button>
     </div>
-
     <p id="modalStatus" class="modal-status">Aguardando...</p>
-
     <canvas id="fotoCanvas" style="display:none;"></canvas>
   </div>
 </div>

@@ -447,132 +447,91 @@ footer{
 /* ===========================
    MODAL DA CÂMERA
    =========================== */
-.modal-camera{
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.45);
-backdrop-filter: blur(6px);
-display: flex;
-align-items: center;
-justify-content: center;
-opacity: 0;
-pointer-events: none;
-transition: opacity var(--transition);
-z-index: 2000;
+.modal-camera {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 9999;
 }
 
-.modal-camera.open{
-opacity: 1;
-pointer-events: all;
+.modal-content {
+  background: var(--card);
+  color: var(--bg);
+  padding: 1.8rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.25s ease-out;
 }
 
-.modal-camera-content{
-width: 92%;
-max-width: 480px;
-background: var(--card);
-border-radius: 16px;
-padding: 24px;
-box-shadow: var(--shadow);
-position: relative;
-display: flex;
-flex-direction: column;
-gap: 18px;
-animation: fadeUp 500ms ease both;
-backdrop-filter: blur(6px);
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.modal-camera-close{
-position: absolute;
-top: 10px;
-right: 10px;
-background: transparent;
-border: none;
-font-size: 1.35rem;
-cursor: pointer;
-color: var(--muted);
-transition: transform var(--transition), color var(--transition);
+/* Botão fechar */
+.botao-fechar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.1);
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 5px 7px;
+  transition: 0.2s;
+}
+.botao-fechar:hover {
+  background: rgba(0,0,0,0.2);
 }
 
-.modal-camera-close:hover{
-transform: scale(1.2);
-color: var(--accent);
+/* Título */
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #08324a;
 }
 
-.modal-camera-title{
-margin: 0;
-color: var(--accent);
-font-size: 1.45rem;
-font-weight: 700;
-text-align: center;
-letter-spacing: .4px;
+/* Vídeo */
+.video-wrap video {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
 }
 
-.modal-video-wrap{
-width: 100%;
-border-radius: 14px;
-overflow: hidden;
-background: #000;
-box-shadow: var(--shadow);
-position: relative;
+/* Botão tirar foto */
+.botao-foto {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #ffffff;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.botao-foto:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
 }
 
-.modal-video-wrap video{
-width: 100%;
-height: auto;
-display: block;
-background: #000;
+/* Status */
+.modal-status {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #04151f;
 }
-
-.modal-camera-controls{
-display: flex;
-justify-content: center;
-margin-top: 6px;
-}
-
-.modal-camera-btn{
-padding: 11px 18px;
-cursor: pointer;
-border: 0;
-border-radius: 12px;
-background: linear-gradient(90deg,var(--accent),var(--accent-2));
-color: #fff;
-font-weight: 700;
-font-size: 1rem;
-transition: transform var(--transition), box-shadow var(--transition);
-box-shadow: var(--shadow);
-}
-
-.modal-camera-btn:hover{
-transform: translateY(-5px);
-}
-
-.modal-camera-status{
-margin: 0;
-text-align: center;
-color: var(--muted);
-font-size: 1rem;
-background: var(--glass);
-padding: 10px;
-border-radius: 10px;
-box-shadow: var(--shadow);
-}
-
-#fotoCanvas{
-display: none;
-}
-
-/* Responsivo */
-@media (max-width: 480px){
-.modal-camera-content{
-padding: 18px;
-gap: 14px;
-}
-
-.modal-camera-btn{
-width: 100%;
-}
-}
-
 
 /* ===========================
    RESPONSIVIDADE
